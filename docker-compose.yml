@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:latest
-    env_file:
-      - /.env
+    image: postgres:latest    
     ports:
       - "5432:5432"
     volumes:
@@ -13,9 +11,7 @@ services:
       replicas: 1
 
   minio:
-    image: minio/minio:latest
-    env_file:
-      - /.env
+    image: minio/minio:latest    
     ports:
       - "9090:9000"
     volumes:
