@@ -5,31 +5,41 @@ services:
     image: postgres:latest    
     ports:
       - "5432:5432"
+    env_file:
+      - /.env
     volumes:
       - postgres_data_eleitoral:/var/lib/postgresql/data
     deploy:
       replicas: 1
+    networks:
+      - rede_eleitoral
 
   minio:
-    image: minio/minio:latest    
+    image: quay.io/minio/minio
     ports:
       - "9090:9000"
+      - "9001:9001"
+    env_file:
+      - /.env
     volumes:
       - minio_data_eleitoral:/data
-    command: server /data
+    command: server /data --console-address ":9001"
     deploy:
       replicas: 1
+    networks:
+      - rede_eleitoral
+
 
   ollama:
     image: ollama/ollama:latest
     ports:
-      - "8080:8080"
-    command: ollama run llama3
-    depends_on:
-      - postgres
-      - redis
+      - "11434:11434"
     deploy:
       replicas: 1
+    networks:
+      - rede_eleitoral
+    volumes:
+      - ollama_data:/root
 
   redis:
     image: redis:latest
@@ -37,7 +47,14 @@ services:
       - "6379:6379"
     deploy:
       replicas: 1
+    networks:
+      - rede_eleitoral
 
 volumes:
   postgres_data_eleitoral:
-  minio_data_eleitoral:
+  minio_data_eleitoral: 
+  ollama_data:
+
+networks:
+  rede_eleitoral:
+    driver: overlay

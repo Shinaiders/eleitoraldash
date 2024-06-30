@@ -1,63 +1,47 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Carousel from "react-multi-carousel";
+import Slider from "react-slick";
+import { Skeleton } from "../ui/skeleton";
 
-export interface Noticia {
-  id: number;
-  tipo: string;
-  titulo: string;
-  introducao: string;
-  data_publicacao: string;
-  link: string;
-  // Adicione outras propriedades conforme necessário
-}
-
-export interface Imagem {
-  image_intro: string;
-  float_intro: string;
-  image_intro_alt: string;
-  image_intro_caption: string;
-  image_fulltext: string;
-  float_fulltext: string;
-  image_fulltext_alt: string;
-  image_fulltext_caption: string;
-  // Adicione outras propriedades conforme necessário
-}
-
-const responsive = {
-  superLargeDesktop: {
-    // the naming can be any, depends on you.
-    breakpoint: { max: 4000, min: 3000 },
-    items: 5,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 3,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 2,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-};
+const backend = process.env.NEXT_PUBLIC_BACKEND;
 
 export default function NoticiaPage() {
-  const [dados, setDados] = useState([]);
+  const [noticias, setNoticias] = useState<noticiasUI[]>([]);
+
+  interface noticiasUI {
+    id: string;
+    author: string;
+    title: string;
+  }
+
+  const settings = {
+    infinite: true,
+    speed: 1000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 8000,
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(
-          "https://servicodados.ibge.gov.br/api/v3/noticias/?qtd=3"
-        );
-        
-        setDados(response.data);
+        const response = await axios.get(`${backend}/tools/noticias`);
 
-        console.log("dados", dados);
+        // Ensure data has valid structure before updating state
+        if (
+          Array.isArray(response.data) &&
+          response.data.every((item: any) => !!item.id)
+        ) {
+          setNoticias(response.data);
+        } else {
+          console.warn(
+            "Invalid data format received from backend. Skipping update."
+          );
+        }
+
+        console.log("Fetched noticias:", response.data); // Log for debugging
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
       }
@@ -67,26 +51,32 @@ export default function NoticiaPage() {
   }, []);
 
   return (
-    <div className="flex gap-4">
-      <Carousel
-        swipeable={false}
-        draggable={false}
-        showDots={true}
-        responsive={responsive}
-        ssr={true}
-        infinite={true}
-        autoPlay={true}
-        autoPlaySpeed={1000}
-        keyBoardControl={true}
-        customTransition="all .5"
-        transitionDuration={5000}
-        containerClass="carousel-container"
-        removeArrowOnDeviceType={["tablet", "mobile"]}
-        dotListClass="custom-dot-list-style"
-        itemClass="carousel-item-padding-40-px"
-      >
-        <h1>teste</h1>
-      </Carousel>
+    <div>
+      {noticias.length > 0 && (
+        <Slider {...settings}>
+          {noticias.map((noticia: noticiasUI) => (
+            <div key={noticia.id} className="flex flex-col p-2 hyphens-manual">
+              <div>
+                <h1 className="flex text-xl italic items-center justify-center">
+                  {noticia.title}
+                </h1>
+              </div>
+              <div className="flex py-6 justify-end">
+                <span className="italic border-x-black">{noticia.author}</span>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      )}
+      {noticias.length === 0 && (
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
