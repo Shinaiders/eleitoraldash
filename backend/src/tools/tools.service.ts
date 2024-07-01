@@ -126,7 +126,7 @@ export class ToolsService {
       };
       const res = await fetch('http://localhost:11434/api/generate', options);
       const ver = await res.json();
-      await this.redis.setex('versiculo', 100, JSON.stringify(ver));
+      await this.redis.setex('versiculo', 1000, JSON.stringify(ver));
 
       return ver;
     } catch (error) {}

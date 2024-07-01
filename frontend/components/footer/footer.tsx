@@ -17,7 +17,7 @@ function FooterPage() {
       setGithub(dados.data.html_url);
       console.log(dados);
       let versiculo = await api.get("/tools/versiculo");
-      const formatversiculo = versiculo.data.response.split("-").join(" ")
+      const formatversiculo = versiculo.data.response.split("-").join(" ");
       setVersiculo(formatversiculo);
 
       console.log(versiculo);
