@@ -17,9 +17,7 @@ export default function AvisoPage() {
         <button className="flex bg-indigo-500 hover:bg-indigo-400 p-2 rounded">
           <span className="text-white">Candidatos</span>
         </button>
-        <button className="flex bg-gradient-to-r from-emerald-500 to-indigo-400 hover:from-emerald-400 hover:to-indigo-300 text-white justify-center items-center p-2 rounded">
-          <span>Votar</span>
-        </button>
+        
       </div>
     </div>
   );

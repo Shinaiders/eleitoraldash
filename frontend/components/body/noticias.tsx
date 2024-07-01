@@ -51,7 +51,7 @@ export default function NoticiaPage() {
   }, []);
 
   return (
-    <div>
+    <div className="z-0">
       {noticias.length > 0 && (
         <Slider {...settings}>
           {noticias.map((noticia: noticiasUI) => (
