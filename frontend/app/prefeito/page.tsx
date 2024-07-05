@@ -1,11 +1,15 @@
 "use client";
 
+import { useDadosVotos } from "@/context/votar";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function PrefeitoPage() {
   const [one, setOne] = useState("");
   const [two, setTwo] = useState("");
   const secondInputRef = useRef<HTMLInputElement | null>(null);
+  const { SetarPrefeito } = useDadosVotos();
+  const router = useRouter();
 
   const handleChangeOne = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -29,7 +33,9 @@ export default function PrefeitoPage() {
 
   useEffect(() => {
     const combinedValue = one + two; // Une os valores de 'one' e 'two'
-    console.log("Valor combinado:", combinedValue);
+    if (combinedValue.length === 2) {
+      SetarPrefeito(Number(combinedValue));
+    }
 
     // Agora você pode enviar 'combinedValue' para a API
   }, [one, two]);
@@ -69,6 +75,8 @@ export default function PrefeitoPage() {
           </button>
 
           <button
+            type="button"
+            onClick={() => router.push("/saladevoto")}
             className={`inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-emerald-500 rounded-lg h-[50px] ${
               one && two ? "" : "cursor-not-allowed opacity-50"
             }`}

@@ -1,11 +1,16 @@
 "use client";
 
+import { useDadosVotos } from "@/context/votar";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function VereadorPage() {
   const [one, setOne] = useState("");
   const [two, setTwo] = useState("");
   const secondInputRef = useRef<HTMLInputElement | null>(null);
+  const { SetarVereador } = useDadosVotos();
+  const router = useRouter();
 
   const handleChangeOne = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -23,13 +28,15 @@ export default function VereadorPage() {
   };
 
   const handleCorrigir = () => {
-    setOne("")
-    setTwo("")
-  }
+    setOne("");
+    setTwo("");
+  };
 
   useEffect(() => {
     const combinedValue = one + two; // Une os valores de 'one' e 'two'
-    console.log("Valor combinado:", combinedValue);
+    if (combinedValue.length === 2) {
+      SetarVereador(Number(combinedValue));
+    }
 
     // Agora você pode enviar 'combinedValue' para a API
   }, [one, two]);
@@ -61,11 +68,19 @@ export default function VereadorPage() {
           />
         </div>
         <div className="flex gap-2 py-6">
-          <button onClick={handleCorrigir} className="inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-yellow-500 rounded-lg h-[50px]">
+          <button
+            onClick={handleCorrigir}
+            className="inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-yellow-500 rounded-lg h-[50px]"
+          >
             Corrigir
           </button>
 
-          <button  className="inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-emerald-500 rounded-lg h-[50px]">
+          <button
+            type="button"
+            onClick={() => router.push("/prefeito")}
+            className="inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-emerald-500 rounded-lg h-[50px]"
+            disabled={!one || !two}
+          >
             Confirmar
           </button>
         </div>

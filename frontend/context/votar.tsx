@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 import { ReactNode, createContext, useContext, useState } from "react";
 
@@ -39,9 +39,11 @@ export const DadosVotoContext: React.FC<dadosVotoProviderProps> = ({
   const [zap, setZap] = useState();
 
   function SetarVereador(vereador: number) {
+    console.log("para vereador", vereador);
     setVereador(vereador);
   }
   function SetarPrefeito(prefeito: number) {
+    console.log("para prefeito", prefeito);
     setPrefeito(prefeito);
   }
   function SetarCep(cep: any) {

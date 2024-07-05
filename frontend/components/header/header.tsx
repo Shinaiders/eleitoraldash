@@ -11,7 +11,7 @@ export default function HeaderPage() {
           <li>Pré-Candidatos</li>
           <li>Contato</li>
           <Link
-            href="/saladevoto"
+            href="/vereador"
             className="flex rounded text-white p-2 transition ease-in-out delay-150 bg-emerald-500 hover:-translate-y-1 hover:scale-110 hover:bg-emerald-400 duration-300"
           >
             Votar
