@@ -10,6 +10,7 @@ import {
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
+import { UIcep } from './dto/verificarcep-dto';
 
 @Controller('tools')
 export class ToolsController {
@@ -22,6 +23,13 @@ export class ToolsController {
 
   @Get('versiculo')
   Versiculo() {
-    return this.toolsService.versiculo()
+    return this.toolsService.versiculo();
   }
+
+  @Post('VerificarCEP')
+  VerificarCEP(@Body() cep: UIcep) {
+    return this.toolsService.VerificarCEP(cep);
+  }
+
+  
 }

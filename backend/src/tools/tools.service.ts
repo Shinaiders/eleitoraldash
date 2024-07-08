@@ -4,6 +4,8 @@ import { RedisService } from 'src/redis/redis.client';
 import { PrismaService } from 'src/prisma-client/prisma.service';
 import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
+import { UIcep } from './dto/verificarcep-dto';
+import { VerificarNumber } from './dto/verificarwhatsapp.dto';
 
 // Definindo a interface para os artigos
 interface Article {
@@ -131,4 +133,17 @@ export class ToolsService {
       return ver;
     } catch (error) {}
   }
+
+  async VerificarCEP(data: UIcep) {
+    const res = await fetch(`https://viacep.com.br/ws/${data.cep}/json/`);
+    console.log(data.cep);
+
+    if (res.status === 400) {
+      return false;
+    }
+    return true;
+  }
+  
+
+  
 }
